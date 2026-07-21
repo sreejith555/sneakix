@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>SNEAKIX — Step Up</title>
+<title>SNEAKIX</title>
 <meta name="theme-color" content="#111111">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -103,7 +103,8 @@
     transition:box-shadow var(--dur-med) var(--ease);
   }
   header.scrolled{ box-shadow:var(--shadow-2); }
-  .header-side{ display:flex; align-items:center; min-width:0; }
+  .header-side{ display:flex; align-items:center; min-width:0; gap:2px; }
+  .header-side-left .policy-link{ white-space:nowrap; font-size:10px; padding:8px 3px; }
   .header-side-left{ justify-content:flex-start; }
   .header-side-right{ justify-content:flex-end; }
   .brand-block{
@@ -444,6 +445,23 @@
   }
   .wa-fab.dragging{ cursor:grabbing; box-shadow:0 22px 48px rgba(17,17,17,0.3); }
   .wa-fab svg{ width:25px; height:25px; flex:none; pointer-events:none; }
+  .wa-fab-hide{
+    position:absolute; top:-4px; right:-4px;
+    width:19px; height:19px; border-radius:50%;
+    background:var(--ink); color:#fff; border:2px solid var(--paper);
+    font-size:9px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .wa-fab-reopen{
+    position:fixed; right:14px; top:50%; transform:translateY(-50%);
+    width:38px; height:38px; border-radius:50% 0 0 50%;
+    background:var(--success); color:var(--success-ink); border:none;
+    display:none; align-items:center; justify-content:center;
+    box-shadow:var(--shadow-2); cursor:pointer; z-index:70; opacity:0.9;
+  }
+  .wa-fab-reopen svg{ width:19px; height:19px; }
+  .wa-fab-reopen.show{ display:flex; }
+  .wa-fab-reopen.auto-hidden{ display:none; }
 
   /* ---------- Photo lightbox ---------- */
   .lightbox{
@@ -504,6 +522,42 @@
     padding:4px 8px; border-radius:var(--radius-pill);
   }
 
+  /* ---------- Full-screen item detail ---------- */
+  .item-detail-overlay{
+    position:fixed; inset:0; background:var(--paper);
+    z-index:85; display:none; flex-direction:column;
+    opacity:0; transition:opacity var(--dur-med) var(--ease);
+  }
+  .item-detail-overlay.open{ display:flex; opacity:1; }
+  .item-detail-back{
+    position:fixed; top:calc(12px + env(safe-area-inset-top, 0px)); left:12px; z-index:3;
+    background:var(--paper); border:1.5px solid var(--line); border-radius:var(--radius-pill);
+    padding:9px 16px; font-size:13px; font-weight:700; color:var(--ink);
+    cursor:pointer; box-shadow:var(--shadow-2);
+  }
+  .item-detail-scroll{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  .item-detail-stage{
+    position:relative; width:100%; aspect-ratio:1/1; max-height:60vh;
+    background:var(--panel); display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .item-detail-stage img{ width:100%; height:100%; object-fit:contain; user-select:none; -webkit-user-drag:none; }
+  .item-detail-stage .lightbox-nav{ background:rgba(17,17,17,0.5); }
+  .item-detail-stage .lightbox-nav:hover{ background:rgba(17,17,17,0.7); }
+  .item-detail-counter{
+    position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+    background:rgba(17,17,17,0.6); color:#fff; padding:4px 10px; border-radius:var(--radius-pill);
+    margin-bottom:0;
+  }
+  .item-detail-tags{ position:absolute; top:10px; left:10px; }
+  .item-detail-thumbs{ padding:12px 14px; background:var(--paper); }
+  .item-detail-info{ padding:18px 18px calc(32px + env(safe-area-inset-bottom, 0px)); max-width:560px; margin:0 auto; }
+  .item-detail-name{ font-size:19px; font-weight:800; color:var(--ink); line-height:1.3; margin:2px 0 10px; }
+  .item-detail-desc{
+    margin-top:22px; padding-top:18px; border-top:1px solid var(--line);
+    font-size:13.5px; color:var(--muted); line-height:1.65;
+  }
+
   /* ---------- Modal / sheet ---------- */
   .overlay{
     position:fixed; inset:0; background:rgba(15,15,14,0.55);
@@ -549,6 +603,18 @@
   .policy-list{ margin:0; padding-left:18px; font-size:13px; color:var(--muted); line-height:1.65; }
   .policy-list li{ margin-bottom:6px; }
   .policy-list li:last-child{ margin-bottom:0; }
+
+  .size-chart-group{ margin-bottom:20px; }
+  .size-chart-brands{ font-size:13px; font-weight:800; color:var(--ink); margin:0 0 8px; }
+  .size-chart-sub{ font-size:11.5px; color:var(--muted); margin:-4px 0 10px; line-height:1.5; }
+  .size-chart-table{ width:100%; border-collapse:collapse; font-size:13px; }
+  .size-chart-table th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--muted); padding:6px 10px; border-bottom:1.5px solid var(--line);
+  }
+  .size-chart-table td{ padding:7px 10px; border-bottom:1px solid var(--line); color:var(--ink); font-weight:600; }
+  .size-chart-table tr:last-child td{ border-bottom:none; }
+  .size-chart-note{ font-size:11.5px; color:var(--muted); line-height:1.6; margin-top:4px; }
 
   .cart-line{ display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); align-items:center; }
   .cart-line img{width:58px; height:58px; object-fit:cover; border-radius:8px; background:#eee; flex:none;}
@@ -714,6 +780,7 @@
 <header id="siteHeader">
   <div class="header-side header-side-left">
     <button class="policy-link" onclick="openSheetById('policyOverlay')">Our Policy</button>
+    <button class="policy-link" onclick="openSizeChart()">Size Chart</button>
   </div>
   <div class="brand-block">
     <div class="logo-badge"><img src="data:image/jpeg;base64,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" alt="Sneakix logo" class="logo-img"></div>
@@ -777,7 +844,11 @@
   <a class="wa-fab" href="#" id="waSupportBtn" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp — drag to move" title="Chat on WhatsApp (drag to move)">
     <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16.004 3C9.096 3 3.49 8.606 3.49 15.513c0 2.373.66 4.59 1.804 6.482L3 29l7.176-2.257a12.46 12.46 0 0 0 5.828 1.457h.005c6.907 0 12.512-5.606 12.512-12.513C28.52 8.78 22.916 3 16.004 3zm0 22.851h-.004a10.34 10.34 0 0 1-5.267-1.442l-.378-.224-3.912 1.23 1.253-3.815-.246-.393a10.31 10.31 0 0 1-1.578-5.494c0-5.7 4.638-10.338 10.336-10.338 2.761 0 5.356 1.077 7.31 3.032a10.27 10.27 0 0 1 3.024 7.31c0 5.7-4.638 10.134-10.538 10.134zm5.665-7.735c-.31-.156-1.835-.906-2.119-1.01-.284-.104-.491-.156-.698.156-.207.31-.802 1.009-.983 1.216-.181.207-.362.233-.672.078-.31-.156-1.31-.483-2.495-1.539-.923-.823-1.546-1.84-1.727-2.15-.181-.31-.02-.478.136-.633.14-.14.31-.362.465-.543.155-.181.207-.31.31-.517.104-.207.052-.388-.026-.543-.078-.156-.698-1.682-.956-2.303-.252-.605-.508-.523-.698-.533-.181-.008-.388-.01-.595-.01-.207 0-.543.078-.828.388-.284.31-1.086 1.061-1.086 2.587s1.112 3 1.267 3.207c.156.207 2.19 3.343 5.305 4.688.741.32 1.319.511 1.77.654.744.236 1.42.203 1.955.123.596-.089 1.835-.75 2.094-1.474.259-.724.259-1.345.181-1.474-.078-.129-.284-.207-.594-.362z"/></svg>
   </a>
+  <button class="wa-fab-hide" onclick="hideWaFab()" aria-label="Hide the WhatsApp button">✕</button>
 </div>
+<button class="wa-fab-reopen" id="waFabReopen" onclick="showWaFab()" aria-label="Show the WhatsApp chat button" title="Chat on WhatsApp">
+  <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16.004 3C9.096 3 3.49 8.606 3.49 15.513c0 2.373.66 4.59 1.804 6.482L3 29l7.176-2.257a12.46 12.46 0 0 0 5.828 1.457h.005c6.907 0 12.512-5.606 12.512-12.513C28.52 8.78 22.916 3 16.004 3zm0 22.851h-.004a10.34 10.34 0 0 1-5.267-1.442l-.378-.224-3.912 1.23 1.253-3.815-.246-.393a10.31 10.31 0 0 1-1.578-5.494c0-5.7 4.638-10.338 10.336-10.338 2.761 0 5.356 1.077 7.31 3.032a10.27 10.27 0 0 1 3.024 7.31c0 5.7-4.638 10.134-10.538 10.134zm5.665-7.735c-.31-.156-1.835-.906-2.119-1.01-.284-.104-.491-.156-.698.156-.207.31-.802 1.009-.983 1.216-.181.207-.362.233-.672.078-.31-.156-1.31-.483-2.495-1.539-.923-.823-1.546-1.84-1.727-2.15-.181-.31-.02-.478.136-.633.14-.14.31-.362.465-.543.155-.181.207-.31.31-.517.104-.207.052-.388-.026-.543-.078-.156-.698-1.682-.956-2.303-.252-.605-.508-.523-.698-.533-.181-.008-.388-.01-.595-.01-.207 0-.543.078-.828.388-.284.31-1.086 1.061-1.086 2.587s1.112 3 1.267 3.207c.156.207 2.19 3.343 5.305 4.688.741.32 1.319.511 1.77.654.744.236 1.42.203 1.955.123.596-.089 1.835-.75 2.094-1.474.259-.724.259-1.345.181-1.474-.078-.129-.284-.207-.594-.362z"/></svg>
+</button>
 
 <!-- Policy sheet -->
 <div class="overlay" id="policyOverlay" onclick="if(event.target===this) closeSheet('policyOverlay')">
@@ -832,16 +903,21 @@
   </div>
 </div>
 
-<!-- Photo lightbox -->
-<div class="lightbox" id="lightbox" onclick="if(event.target===this) closeLightbox()" role="dialog" aria-modal="true" aria-label="Product photos">
-  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close photo viewer">✕</button>
-  <div class="lightbox-stage">
-    <button class="lightbox-nav prev" onclick="lightboxStep(-1)" aria-label="Previous photo">‹</button>
-    <img id="lightboxImg" src="" alt="">
-    <button class="lightbox-nav next" onclick="lightboxStep(1)" aria-label="Next photo">›</button>
+<!-- Size chart guide -->
+<div class="overlay" id="sizeChartOverlay" onclick="if(event.target===this) closeSheet('sizeChartOverlay')">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sizeChartHeading">
+    <button class="close-x" onclick="closeSheet('sizeChartOverlay')" aria-label="Close">✕</button>
+    <div class="sheet-handle"></div>
+    <h2 id="sizeChartHeading">Size Chart</h2>
+    <p class="policy-sub">UK to EU conversion by brand</p>
+    <div id="sizeChartContent"></div>
   </div>
-  <div class="lightbox-counter" id="lightboxCounter"></div>
-  <div class="lightbox-thumbs" id="lightboxThumbs"></div>
+</div>
+
+<!-- Full-screen item detail -->
+<div class="item-detail-overlay" id="itemDetailOverlay" role="dialog" aria-modal="true" aria-label="Product details">
+  <button class="item-detail-back" onclick="closeItemDetail()" aria-label="Back">← Back</button>
+  <div class="item-detail-scroll" id="itemDetailContent"></div>
 </div>
 
 <!-- Filters sheet -->
@@ -859,6 +935,9 @@
 
     <h3>Model</h3>
     <div class="filter-chip-row" id="filterModelRow"></div>
+
+    <h3>Sort By</h3>
+    <div class="filter-chip-row" id="filterSortRow"></div>
 
     <h3>Price</h3>
     <div class="price-filter">
@@ -958,8 +1037,7 @@ const INSTAGRAM_URL = "https://instagram.com/sneakix__"; // <-- verify this matc
 
 // PASTE your Google Sheet "Publish to web -> CSV" link here.
 // This is the ONLY line you need to update to connect your live sheet.
-const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSQnTkuatojteAYVHTwwfiXUFnnu0-VC0Ro2i06PSKKBUlBApmpiDgoUXYiP2F6gw/pub?gid=229738022&single=true&output=csv";
-
+const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSQnTkuatojteAYVHTwwfiXUFnnu0-VC0Ro2i06PSKKBUlBApmpiDgoUXYiP2F6gw/pub?gid=229738022&single=true&output=csv"
 let SHOES = [];
 
 function toBool(v){ return String(v).trim().toUpperCase() === "TRUE"; }
@@ -1058,10 +1136,10 @@ let activeModel = "All";
 let priceMin = 0;
 let priceMax = 10000;
 let activeSize = "all";
+let activeSort = "latest"; // latest | price_low | price_high
 let searchTerm = "";
 let cart = [];
 const selections = {};
-const expandedCards = {};
 let selectedShipping = "free";
 
 const PAGE_SIZE = 12;
@@ -1070,10 +1148,12 @@ let visibleCount = PAGE_SIZE;
 document.getElementById("waSupportBtn").href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi Sneakix! I have a question.")}`;
 document.getElementById("footerWhatsapp").href = `https://wa.me/${WHATSAPP_NUMBER}`;
 
-// Draggable floating WhatsApp button — the shopper can drag it anywhere
-// on screen so it's never stuck covering something. A short-movement tap
-// still opens WhatsApp; a real drag (past a small threshold) repositions
-// it instead and is remembered for next visit.
+// Draggable floating WhatsApp button.
+// - Always starts at center-right on every page load (no position memory).
+// - Can be dragged during the session, but only within the right half of
+//   the screen — it can't be dragged over to the left side.
+// - A small hide control tucks it away; a small tab brings it back.
+// - A short-movement tap still opens WhatsApp; a real drag repositions it.
 const waFabWrap = document.getElementById("waFabWrap");
 const waFabBtn = document.getElementById("waSupportBtn");
 const WA_FAB_MARGIN = 8;
@@ -1081,37 +1161,33 @@ const WA_FAB_MARGIN = 8;
 function clampWaFabPosition(x, y){
   const w = waFabWrap.offsetWidth || 52;
   const h = waFabWrap.offsetHeight || 52;
+  const minX = Math.max(window.innerWidth / 2, WA_FAB_MARGIN); // right half only
   const maxX = window.innerWidth - w - WA_FAB_MARGIN;
   const maxY = window.innerHeight - h - WA_FAB_MARGIN;
   return {
-    x: Math.min(Math.max(x, WA_FAB_MARGIN), Math.max(maxX, WA_FAB_MARGIN)),
+    x: Math.min(Math.max(x, minX), Math.max(maxX, minX)),
     y: Math.min(Math.max(y, WA_FAB_MARGIN), Math.max(maxY, WA_FAB_MARGIN))
   };
 }
 
-function setWaFabPosition(x, y, save){
+function setWaFabPosition(x, y){
   const clamped = clampWaFabPosition(x, y);
   waFabWrap.style.left = `${clamped.x}px`;
   waFabWrap.style.top = `${clamped.y}px`;
   waFabWrap.style.right = "auto";
   waFabWrap.style.bottom = "auto";
-  if(save){
-    try{ localStorage.setItem("sneakix_wa_pos", JSON.stringify(clamped)); }catch(e){}
-  }
 }
 
-// Restore a saved position, or default to bottom-right on first visit
-(function initWaFabPosition(){
-  let saved = null;
-  try{ saved = JSON.parse(localStorage.getItem("sneakix_wa_pos")); }catch(e){}
-  if(saved && typeof saved.x === "number" && typeof saved.y === "number"){
-    setWaFabPosition(saved.x, saved.y, false);
-  } else {
-    const defaultX = window.innerWidth - 52 - 20;
-    const defaultY = window.innerHeight - 52 - 24 - (window.visualViewport ? 0 : 0);
-    setWaFabPosition(defaultX, defaultY, false);
-  }
-})();
+function setWaFabDefaultPosition(){
+  const w = waFabWrap.offsetWidth || 52;
+  const h = waFabWrap.offsetHeight || 52;
+  const defaultX = window.innerWidth - w - 16;
+  const defaultY = (window.innerHeight - h) / 2; // vertically centered = "center-right"
+  setWaFabPosition(defaultX, defaultY);
+}
+
+// Always start fresh at the default position — no restore from storage.
+setWaFabDefaultPosition();
 
 let waFabDragging = false;
 let waFabDragMoved = false;
@@ -1134,7 +1210,7 @@ waFabBtn.addEventListener("pointermove", (e) => {
   const dy = Math.abs(e.clientY - (waFabWrap.getBoundingClientRect().top + waFabPointerOffsetY));
   if(dx > 6 || dy > 6) waFabDragMoved = true;
   if(waFabDragMoved){
-    setWaFabPosition(e.clientX - waFabPointerOffsetX, e.clientY - waFabPointerOffsetY, false);
+    setWaFabPosition(e.clientX - waFabPointerOffsetX, e.clientY - waFabPointerOffsetY);
   }
 });
 
@@ -1142,12 +1218,6 @@ function endWaFabDrag(e){
   if(!waFabDragging) return;
   waFabDragging = false;
   waFabBtn.classList.remove("dragging");
-  if(waFabDragMoved){
-    // It was a real drag: save final position, and swallow the click so
-    // WhatsApp doesn't open right after repositioning it.
-    const rect = waFabWrap.getBoundingClientRect();
-    setWaFabPosition(rect.left, rect.top, true);
-  }
 }
 waFabBtn.addEventListener("pointerup", endWaFabDrag);
 waFabBtn.addEventListener("pointercancel", endWaFabDrag);
@@ -1159,11 +1229,23 @@ waFabBtn.addEventListener("click", (e) => {
   }
 });
 
-// Keep it on-screen if the window is resized/rotated
+// Keep it within the right half if the window is resized/rotated
 window.addEventListener("resize", () => {
   const rect = waFabWrap.getBoundingClientRect();
-  setWaFabPosition(rect.left, rect.top, false);
+  setWaFabPosition(rect.left, rect.top);
 });
+
+// Hide / unhide — a small tab replaces the button when hidden, tapping
+// the tab brings the button straight back to the default position.
+function hideWaFab(){
+  waFabWrap.classList.add("hidden");
+  document.getElementById("waFabReopen").classList.add("show");
+}
+function showWaFab(){
+  waFabWrap.classList.remove("hidden");
+  document.getElementById("waFabReopen").classList.remove("show");
+  setWaFabDefaultPosition();
+}
 
 // Automatic hide whenever a sheet (cart/filters/policy) or the photo
 // lightbox is open, so the button never sits on top of the checkout
@@ -1172,6 +1254,7 @@ function updateWaFabAutoHide(){
   const anyOpen = !!document.querySelector(".overlay.open") ||
     !!document.getElementById("lightbox")?.classList.contains("open");
   document.getElementById("waFabWrap").classList.toggle("auto-hidden", anyOpen);
+  document.getElementById("waFabReopen").classList.toggle("auto-hidden", anyOpen);
 }
 document.getElementById("footerFacebook").href = FACEBOOK_URL;
 document.getElementById("footerInstagram").href = INSTAGRAM_URL;
@@ -1186,11 +1269,11 @@ window.addEventListener("scroll", () => {
 window.addEventListener("keydown", (e) => {
   if(e.key === "Escape"){
     document.querySelectorAll(".overlay.open").forEach(o => o.classList.remove("open"));
-    closeLightbox();
+    closeItemDetail();
   }
-  if(lightboxShoeId !== null){
-    if(e.key === "ArrowLeft") lightboxStep(-1);
-    if(e.key === "ArrowRight") lightboxStep(1);
+  if(itemDetailShoeId !== null){
+    if(e.key === "ArrowLeft") itemDetailPhotoStep(-1);
+    if(e.key === "ArrowRight") itemDetailPhotoStep(1);
   }
 });
 
@@ -1210,28 +1293,113 @@ function parseSizes(sizes){
 // shown at checkout could mean an order the store's own policy won't
 // let a customer exchange.
 const BRAND_SIZE_CHARTS = {
-  // Nike / Under Armour / Jordan / Brooks
-  nike:      [[7,41],[7.5,42],[8.5,43],[9,44],[10,45]],
-  "under armour":[[7,41],[7.5,42],[8.5,43],[9,44],[10,45]],
-  ua:        [[7,41],[7.5,42],[8.5,43],[9,44],[10,45]],
-  jordan:    [[7,41],[7.5,42],[8.5,43],[9,44],[10,45]],
-  brooks:    [[7,41],[7.5,42],[8.5,43],[9,44],[10,45]],
-  // Adidas / Puma / Reebok / New Balance / Hoka
-  adidas:    [[7.5,41.5],[8,42],[9,43],[9.5,44.5],[10.5,45.5]],
-  puma:      [[7.5,41.5],[8,42],[9,43],[9.5,44.5],[10.5,45.5]],
-  reebok:    [[7.5,41.5],[8,42],[9,43],[9.5,44.5],[10.5,45.5]],
-  "new balance":[[7.5,41.5],[8,42],[9,43],[9.5,44.5],[10.5,45.5]],
-  nb:        [[7.5,41.5],[8,42],[9,43],[9.5,44.5],[10.5,45.5]],
-  hoka:      [[7.5,41.5],[8,42],[9,43],[9.5,44.5],[10.5,45.5]],
-  // Converse
-  converse:  [[7.5,41],[8.5,42],[9.5,43],[10.5,44],[11.5,45]],
-  // Skechers
-  skechers:  [[7,41],[7.5,42],[8.5,43],[9.5,44],[10.5,45]]
+  // Nike / Under Armour / Jordan / Brooks — updated per store's latest chart
+  nike:      [[3.5,36],[4,37],[5,38],[6,39],[6.5,40],[7,41],[7.5,42],[8.5,43],[9,44],[10,45],[11,46],[12,47]],
+  "under armour":[[3.5,36],[4,37],[5,38],[6,39],[6.5,40],[7,41],[7.5,42],[8.5,43],[9,44],[10,45],[11,46],[12,47]],
+  ua:        [[3.5,36],[4,37],[5,38],[6,39],[6.5,40],[7,41],[7.5,42],[8.5,43],[9,44],[10,45],[11,46],[12,47]],
+  jordan:    [[3.5,36],[4,37],[5,38],[6,39],[6.5,40],[7,41],[7.5,42],[8.5,43],[9,44],[10,45],[11,46],[12,47]],
+  brooks:    [[3.5,36],[4,37],[5,38],[6,39],[6.5,40],[7,41],[7.5,42],[8.5,43],[9,44],[10,45],[11,46],[12,47]],
+  // Adidas — left untouched per instructions (confirmed linear conversion,
+  // UK = EU − 34, extended across the full EU 36–47 range)
+  adidas:    [[2,36],[3,37],[4,38],[5,39],[6,40],[7,41],[8,42],[9,43],[10,44],[11,45],[12,46]],
+  // Puma / Reebok / New Balance / Hoka — updated per store's latest chart
+  puma:      [[3.5,36],[4,37],[5,38],[5.5,39],[6.5,40],[7,41],[7.5,41.5],[8,42],[9,43],[9.5,44],[10,44.5],[10.5,45],[11,45.5],[11.5,46],[12,47]],
+  reebok:    [[3.5,36],[4,37],[5,38],[5.5,39],[6.5,40],[7,41],[7.5,41.5],[8,42],[9,43],[9.5,44],[10,44.5],[10.5,45],[11,45.5],[11.5,46],[12,47]],
+  "new balance":[[3.5,36],[4,37],[5,38],[5.5,39],[6.5,40],[7,41],[7.5,41.5],[8,42],[9,43],[9.5,44],[10,44.5],[10.5,45],[11,45.5],[11.5,46],[12,47]],
+  nb:        [[3.5,36],[4,37],[5,38],[5.5,39],[6.5,40],[7,41],[7.5,41.5],[8,42],[9,43],[9.5,44],[10,44.5],[10.5,45],[11,45.5],[11.5,46],[12,47]],
+  hoka:      [[3.5,36],[4,37],[5,38],[5.5,39],[6.5,40],[7,41],[7.5,41.5],[8,42],[9,43],[9.5,44],[10,44.5],[10.5,45],[11,45.5],[11.5,46],[12,47]],
+  // Converse — updated per store's latest chart
+  converse:  [[3.5,36],[4.5,37],[5.5,38],[6.5,39],[7,40],[7.5,41],[8.5,42],[9.5,43],[10.5,44],[11.5,45],[12,46]],
+  // Skechers — updated per store's latest chart
+  skechers:  [[3,36],[4,37],[5,38],[6,39],[6.5,40],[7,41],[7.5,42],[8.5,43],[9.5,44],[10.5,45],[11.5,46]]
 };
 
 function brandSizeChart(brand){
   const key = (brand || "").toLowerCase().trim();
   return BRAND_SIZE_CHARTS[key] || null;
+}
+
+const BRAND_DISPLAY_NAMES = {
+  nike:"Nike", "under armour":"Under Armour", jordan:"Jordan", brooks:"Brooks",
+  adidas:"Adidas", puma:"Puma", reebok:"Reebok", "new balance":"New Balance", hoka:"Hoka",
+  converse:"Converse", skechers:"Skechers"
+  // ua/nb intentionally omitted here (shorthand duplicates of "under armour"/"new balance")
+};
+
+// General reference chart (not brand-specific) with approximate foot
+// length in cm, for brands without their own confirmed chart above, and
+// so customers can self-measure if they're unsure of their size.
+const GENERAL_SIZE_CHART = [
+  [36, "3.5", "22.5"],
+  [37, "4", "23.0"],
+  [38, "5", "24.0"],
+  [39, "5.5 / 6", "24.5"],
+  [40, "6.5 / 7", "25.0"],
+  [41, "7.5", "25.5"],
+  [42, "8", "26.0"],
+  [43, "9", "27.0"],
+  [44, "10", "28.0"],
+  [45, "11", "29.0"]
+];
+
+function renderSizeChartContent(){
+  const container = document.getElementById("sizeChartContent");
+  if(!container) return;
+
+  const generalRows = GENERAL_SIZE_CHART.map(([eu, uk, cm]) =>
+    `<tr><td>${eu}</td><td>${uk}</td><td>${cm} cm</td></tr>`
+  ).join("");
+  const generalTable = `
+    <div class="size-chart-group">
+      <h4 class="size-chart-brands">General Reference</h4>
+      <p class="size-chart-sub">Use this if your brand isn't listed below, or to double-check by measuring your foot.</p>
+      <table class="size-chart-table">
+        <thead><tr><th>EU</th><th>UK</th><th>Foot Length</th></tr></thead>
+        <tbody>${generalRows}</tbody>
+      </table>
+    </div>
+  `;
+
+  // Group brands that share the exact same conversion table so we don't
+  // print the same numbers five times over — e.g. Nike/Jordan/Brooks all
+  // use one chart, so they appear together under one table.
+  const groups = {};
+  Object.entries(BRAND_SIZE_CHARTS).forEach(([brand, chart]) => {
+    if(!BRAND_DISPLAY_NAMES[brand]) return; // skip shorthand duplicates
+    const key = JSON.stringify(chart);
+    if(!groups[key]) groups[key] = { brands: [], chart };
+    groups[key].brands.push(BRAND_DISPLAY_NAMES[brand]);
+  });
+
+  const euRange = [];
+  for(let eu = 36; eu <= 47; eu++) euRange.push(eu);
+
+  container.innerHTML = generalTable + Object.values(groups).map(group => {
+    // Only whole-EU-size points from the given data land in this grid;
+    // any half-EU point (e.g. 41.5) doesn't correspond to a row here.
+    const euToUk = {};
+    group.chart.forEach(([uk, eu]) => { if(Number.isInteger(eu)) euToUk[eu] = uk; });
+
+    const rows = euRange.map(eu => {
+      const uk = euToUk[eu];
+      return `<tr><td>${eu}</td><td>${uk !== undefined ? uk : '—'}</td></tr>`;
+    }).join("");
+
+    return `
+      <div class="size-chart-group">
+        <h4 class="size-chart-brands">${group.brands.join(" / ")}</h4>
+        <table class="size-chart-table">
+          <thead><tr><th>EU</th><th>UK</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+  }).join("") + `<p class="size-chart-note">"—" means that exact size hasn't been confirmed for that brand yet — please check the brand's official size guide before listing or ordering it. Adidas is fully confirmed across EU 36–47.</p>`;
+}
+
+function openSizeChart(){
+  renderSizeChartContent();
+  openSheetById("sizeChartOverlay");
 }
 
 // Recognized shoe models, matched against the product's Name from the
@@ -1323,10 +1491,26 @@ function shoeMatchesSizeFilter(shoe, filterSize){
 
 function renderFilterStrip(){
   const strip = document.getElementById("filterStrip");
-  const filters = [["all","All"], ["new","New Arrivals"], ["sale","Sale"], ["under2000","Under ₹2000"]];
+  const hasNewArrivals = SHOES.some(s => s.isNew);
+  const hasSale = SHOES.some(s => s.isSale || (s.discount !== null && s.discount !== undefined));
+
+  const filters = [["all","All"], ["under2000","Under ₹2000"]];
+  if(hasNewArrivals) filters.push(["new","New Arrivals"]);
+  if(hasSale) filters.push(["sale","Sale"]);
+
   strip.innerHTML = filters.map(([key,label])=>
     `<button class="pill ${activeFilter===key?'active':''}" onclick="setFilter('${key}')">${label}</button>`
   ).join("");
+
+  // If the currently active filter's pill no longer exists (e.g. the last
+  // sale item was removed from the sheet), fall back to "All" so the grid
+  // doesn't stay stuck showing zero results for a filter that vanished.
+  if(!filters.some(([key]) => key === activeFilter)){
+    activeFilter = "all";
+    strip.innerHTML = filters.map(([key,label])=>
+      `<button class="pill ${activeFilter===key?'active':''}" onclick="setFilter('${key}')">${label}</button>`
+    ).join("");
+  }
 }
 
 function setFilter(key){ activeFilter = key; visibleCount = PAGE_SIZE; renderFilterStrip(); renderGrid(); }
@@ -1386,6 +1570,7 @@ function setType(t){ activeType = t; visibleCount = PAGE_SIZE; renderFilterSheet
 function setBrand(b){ activeBrand = b; visibleCount = PAGE_SIZE; renderFilterSheet(); renderGrid(); }
 function setModel(m){ activeModel = m; visibleCount = PAGE_SIZE; renderFilterSheet(); renderGrid(); }
 function setSizeFilter(sz){ activeSize = sz; visibleCount = PAGE_SIZE; renderFilterSheet(); renderGrid(); }
+function setSort(mode){ activeSort = mode; visibleCount = PAGE_SIZE; renderFilterSheet(); renderGrid(); }
 
 function onPriceSliderChange(){
   let min = Number(document.getElementById("priceMinSlider").value);
@@ -1402,7 +1587,7 @@ function onPriceSliderChange(){
 
 function clearAllFilters(){
   activeCategory = "All"; activeType = "All"; activeBrand = "All"; activeModel = "All";
-  priceMin = 0; priceMax = 10000; activeSize = "all"; activeFilter = "all";
+  priceMin = 0; priceMax = 10000; activeSize = "all"; activeFilter = "all"; activeSort = "latest";
   visibleCount = PAGE_SIZE;
   document.getElementById("priceMinSlider").value = 0;
   document.getElementById("priceMaxSlider").value = 10000;
@@ -1413,7 +1598,7 @@ function clearAllFilters(){
 
 function updateFilterBadge(){
   const priceActive = priceMin > 0 || priceMax < 10000;
-  const count = [activeType!=="All", activeBrand!=="All", activeModel!=="All", priceActive, activeSize!=="all"].filter(Boolean).length;
+  const count = [activeType!=="All", activeBrand!=="All", activeModel!=="All", priceActive, activeSize!=="all", activeSort!=="latest"].filter(Boolean).length;
   const badge = document.getElementById("filterBadge");
   if(!badge) return;
   if(count > 0){ badge.style.display = "flex"; badge.textContent = count; }
@@ -1422,6 +1607,11 @@ function updateFilterBadge(){
 
 function renderFilterSheet(){
   if(!document.getElementById("filterTypeRow")) return;
+
+  const sortOptions = [["latest","Newest"], ["price_low","Price: Low to High"], ["price_high","Price: High to Low"]];
+  document.getElementById("filterSortRow").innerHTML = sortOptions.map(([key,label])=>
+    `<button class="filter-chip ${activeSort===key?'active':''}" onclick="setSort('${key}')">${label}</button>`
+  ).join("");
 
   const types = ["All", ...new Set(SHOES.map(s=>categoryType(s.category)))];
   document.getElementById("filterTypeRow").innerHTML = types.map(t=>
@@ -1461,9 +1651,27 @@ function renderFilterSheet(){
   updateFilterBadge();
 }
 
+function shoeHasSmallEuSize(shoe){
+  const sys = (shoe.sizeSystem || "").toLowerCase();
+  if(!sys.includes("eu")) return false;
+  const sizes = parseSizes(shoe.sizes);
+  // A non-Women's-category item is only eligible to appear in Women's if it
+  // has at least one EU size in 36-39. If its sizes start at 40 or above,
+  // it does NOT qualify. (Actual Women's-category items are always shown
+  // regardless of size — handled separately in getFilteredShoes.)
+  return sizes.some(sz => sz >= 36 && sz <= 39);
+}
+
 function getFilteredShoes(){
   return SHOES.filter(shoe=>{
-    if(activeCategory !== "All" && categoryBucket(shoe.category) !== activeCategory) return false;
+    if(activeCategory !== "All"){
+      if(activeCategory === "Women's"){
+        const isWomensCategory = categoryBucket(shoe.category) === "Women's";
+        if(!isWomensCategory && !shoeHasSmallEuSize(shoe)) return false;
+      } else {
+        if(categoryBucket(shoe.category) !== activeCategory) return false;
+      }
+    }
     if(activeType !== "All" && categoryType(shoe.category) !== activeType) return false;
     if(activeBrand !== "All" && shoe.brand !== activeBrand) return false;
     if(activeModel !== "All" && detectModel(shoe.name) !== activeModel) return false;
@@ -1482,7 +1690,12 @@ function getFilteredShoes(){
       if(!haystack.includes(searchTerm)) return false;
     }
     return true;
-  }).sort((a, b) => b.id - a.id); // latest-added first: later sheet rows = newer products
+  }).sort((a, b) => {
+    const priceOf = shoe => (shoe.discount !== null && shoe.discount !== undefined) ? shoe.discount : shoe.price;
+    if(activeSort === "price_low") return priceOf(a) - priceOf(b);
+    if(activeSort === "price_high") return priceOf(b) - priceOf(a);
+    return b.id - a.id; // latest-added first: later sheet rows = newer products
+  });
 }
 
 function renderShowMore(totalCount){
@@ -1514,31 +1727,17 @@ function renderGrid(){
   const list = fullList.slice(0, visibleCount);
 
   grid.innerHTML = list.map(shoe=>{
-    const sizeOptions = parseSizes(shoe.sizes);
-    const soldOut = shoe.soldOutSizes || [];
-    const selected = selections[shoe.id];
     const hasDiscount = shoe.discount !== null && shoe.discount !== undefined;
-    const isExpanded = !!expandedCards[shoe.id];
-
-    const sizeButtons = sizeOptions.map(sz => {
-      const isSoldOut = soldOut.includes(sz);
-      return `<button class="size-btn ${selected===sz?'selected':''} ${isSoldOut?'soldout':''}"
-        aria-pressed="${selected===sz}" aria-label="Size ${sz}${isSoldOut?' (sold out)':''}"
-        ${isSoldOut ? 'disabled' : `onclick="selectSize(${shoe.id}, ${sz})"`}>${sz}</button>`;
-    }).join("");
-
-    const allSoldOut = sizeOptions.length > 0 && sizeOptions.every(sz => soldOut.includes(sz));
-    const conversion = (selected !== undefined) ? convertSizeForShoe(shoe, selected) : null;
 
     const tags = [];
     if(hasDiscount || shoe.isSale) tags.push('<span class="tag sale">SALE</span>');
     if(shoe.isNew) tags.push('<span class="tag new">NEW</span>');
 
     return `
-      <div class="card" id="shoe-${shoe.id}">
-        <div class="imgwrap" onclick="openLightbox(${shoe.id}, 0)" role="button" tabindex="0"
-          aria-label="View photos of ${shoe.name}"
-          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); openLightbox(${shoe.id}, 0);}">
+      <div class="card" id="shoe-${shoe.id}" onclick="openItemDetail(${shoe.id})" role="button" tabindex="0"
+        aria-label="View details for ${shoe.name}"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); openItemDetail(${shoe.id});}">
+        <div class="imgwrap">
           <img src="${shoe.images[0]}" alt="${shoe.name}" loading="lazy">
           <div class="tag-row">${tags.join("")}</div>
           ${shoe.codAvailable ? '<div class="cod-tag">COD</div>' : ''}
@@ -1546,25 +1745,10 @@ function renderGrid(){
         </div>
         <div class="body">
           <div class="brand">${shoe.brand}</div>
-          <div class="name" onclick="toggleExpand(${shoe.id})" role="button" tabindex="0"
-            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); toggleExpand(${shoe.id});}">${shoe.name}</div>
-          <div class="expand-hint" onclick="toggleExpand(${shoe.id})" role="button" tabindex="0"
-            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); toggleExpand(${shoe.id});}">${isExpanded ? 'Hide details ▲' : 'View details ▼'}</div>
+          <div class="name">${shoe.name}</div>
           <div class="price-row">
             <span class="price-now">₹${hasDiscount ? shoe.discount : shoe.price}</span>
             ${hasDiscount ? `<span class="price-was">₹${shoe.price}</span>` : ''}
-          </div>
-          <div class="size-label" id="sizelabel-${shoe.id}">Select size (${shoe.sizeSystem})</div>
-          <div class="sizes" id="sizes-${shoe.id}" role="group" aria-labelledby="sizelabel-${shoe.id}">${sizeButtons}</div>
-          ${conversion ? `<div class="size-convert">Size ${selected} = ${conversion.text}</div>` : ''}
-          <div class="size-error" id="sizeError-${shoe.id}" role="alert" aria-live="assertive"></div>
-          <button class="add-btn" id="addBtn-${shoe.id}" onclick="addToCart(${shoe.id})" ${allSoldOut ? 'disabled' : ''}>
-            ${allSoldOut ? 'Out of Stock' : 'Add to Cart'}
-          </button>
-        </div>
-        <div class="expand-panel ${isExpanded?'open':''}">
-          <div class="expand-inner">
-            <div class="expand-desc">${shoe.description ? shoe.description : 'Standard packaging.'}</div>
           </div>
         </div>
       </div>
@@ -1574,83 +1758,117 @@ function renderGrid(){
   renderShowMore(fullList.length);
 }
 
-function toggleExpand(shoeId){
-  expandedCards[shoeId] = !expandedCards[shoeId];
-  renderGrid();
-}
+let itemDetailShoeId = null;
+let itemDetailPhotoIndex = 0;
 
-let lightboxShoeId = null;
-let lightboxIndex = 0;
-
-function openLightbox(shoeId, startIndex){
+function openItemDetail(shoeId){
   const shoe = SHOES.find(s => s.id === shoeId);
-  if(!shoe || !shoe.images.length) return;
-  lightboxShoeId = shoeId;
-  lightboxIndex = startIndex || 0;
-  renderLightbox();
-  document.getElementById("lightbox").classList.add("open");
+  if(!shoe) return;
+  itemDetailShoeId = shoeId;
+  itemDetailPhotoIndex = 0;
+  renderItemDetail();
+  document.getElementById("itemDetailOverlay").classList.add("open");
   document.body.style.overflow = "hidden";
   updateWaFabAutoHide();
 }
 
-function closeLightbox(){
-  const el = document.getElementById("lightbox");
+function closeItemDetail(){
+  const el = document.getElementById("itemDetailOverlay");
   if(el) el.classList.remove("open");
   document.body.style.overflow = "";
-  lightboxShoeId = null;
+  itemDetailShoeId = null;
   updateWaFabAutoHide();
 }
 
-function lightboxStep(direction){
-  const shoe = SHOES.find(s => s.id === lightboxShoeId);
+function itemDetailPhotoStep(direction){
+  const shoe = SHOES.find(s => s.id === itemDetailShoeId);
   if(!shoe) return;
   const count = shoe.images.length;
-  lightboxIndex = (lightboxIndex + direction + count) % count;
-  renderLightbox();
+  itemDetailPhotoIndex = (itemDetailPhotoIndex + direction + count) % count;
+  renderItemDetail();
 }
 
-function lightboxGoTo(index){
-  lightboxIndex = index;
-  renderLightbox();
+function itemDetailPhotoGoTo(index){
+  itemDetailPhotoIndex = index;
+  renderItemDetail();
 }
 
-function renderLightbox(){
-  const shoe = SHOES.find(s => s.id === lightboxShoeId);
-  if(!shoe) return;
-  const count = shoe.images.length;
-  const hasMultiple = count > 1;
+function renderItemDetail(){
+  const shoe = SHOES.find(s => s.id === itemDetailShoeId);
+  const container = document.getElementById("itemDetailContent");
+  if(!shoe || !container) return;
 
-  const img = document.getElementById("lightboxImg");
-  img.src = shoe.images[lightboxIndex];
-  img.alt = `${shoe.name} — photo ${lightboxIndex + 1} of ${count}`;
+  const sizeOptions = parseSizes(shoe.sizes);
+  const soldOut = shoe.soldOutSizes || [];
+  const selected = selections[shoe.id];
+  const hasDiscount = shoe.discount !== null && shoe.discount !== undefined;
+  const allSoldOut = sizeOptions.length > 0 && sizeOptions.every(sz => soldOut.includes(sz));
+  const conversion = (selected !== undefined) ? convertSizeForShoe(shoe, selected) : null;
+  const photoCount = shoe.images.length;
+  const hasMultiplePhotos = photoCount > 1;
 
-  document.getElementById("lightboxCounter").textContent = hasMultiple ? `${lightboxIndex + 1} / ${count}` : "";
-  document.getElementById("lightboxCounter").style.display = hasMultiple ? "block" : "none";
+  const tags = [];
+  if(hasDiscount || shoe.isSale) tags.push('<span class="tag sale">SALE</span>');
+  if(shoe.isNew) tags.push('<span class="tag new">NEW</span>');
 
-  document.querySelectorAll(".lightbox-nav").forEach(el => { el.style.display = hasMultiple ? "flex" : "none"; });
+  const sizeButtons = sizeOptions.map(sz => {
+    const isSoldOut = soldOut.includes(sz);
+    return `<button class="size-btn ${selected===sz?'selected':''} ${isSoldOut?'soldout':''}"
+      aria-pressed="${selected===sz}" aria-label="Size ${sz}${isSoldOut?' (sold out)':''}"
+      ${isSoldOut ? 'disabled' : `onclick="selectSize(${shoe.id}, ${sz})"`}>${sz}</button>`;
+  }).join("");
 
-  const thumbs = document.getElementById("lightboxThumbs");
-  thumbs.style.display = hasMultiple ? "flex" : "none";
-  thumbs.innerHTML = hasMultiple ? shoe.images.map((src, i) =>
-    `<img src="${src}" class="${i===lightboxIndex?'active':''}" onclick="lightboxGoTo(${i})" alt="View angle ${i+1}">`
-  ).join("") : "";
+  container.innerHTML = `
+    <div class="item-detail-stage">
+      <img id="itemDetailImg" src="${shoe.images[itemDetailPhotoIndex]}" alt="${shoe.name} — photo ${itemDetailPhotoIndex+1} of ${photoCount}">
+      ${hasMultiplePhotos ? `
+        <button class="lightbox-nav prev" onclick="itemDetailPhotoStep(-1)" aria-label="Previous photo">‹</button>
+        <button class="lightbox-nav next" onclick="itemDetailPhotoStep(1)" aria-label="Next photo">›</button>
+        <div class="lightbox-counter item-detail-counter">${itemDetailPhotoIndex+1} / ${photoCount}</div>
+      ` : ""}
+      <div class="tag-row item-detail-tags">${tags.join("")}</div>
+      ${shoe.codAvailable ? '<div class="cod-tag">COD</div>' : ''}
+    </div>
+    ${hasMultiplePhotos ? `
+      <div class="lightbox-thumbs item-detail-thumbs">
+        ${shoe.images.map((src,i)=>`<img src="${src}" class="${i===itemDetailPhotoIndex?'active':''}" onclick="itemDetailPhotoGoTo(${i})" alt="View angle ${i+1}">`).join("")}
+      </div>
+    ` : ""}
+
+    <div class="item-detail-info">
+      <div class="brand">${shoe.brand}</div>
+      <div class="item-detail-name">${shoe.name}</div>
+      <div class="price-row">
+        <span class="price-now">₹${hasDiscount ? shoe.discount : shoe.price}</span>
+        ${hasDiscount ? `<span class="price-was">₹${shoe.price}</span>` : ''}
+      </div>
+
+      <div class="size-label" id="sizelabel-${shoe.id}">Select size (${shoe.sizeSystem})</div>
+      <div class="sizes" id="sizes-${shoe.id}" role="group" aria-labelledby="sizelabel-${shoe.id}">${sizeButtons}</div>
+      ${conversion ? `<div class="size-convert">Size ${selected} = ${conversion.text}</div>` : ''}
+      <div class="size-error" id="sizeError-${shoe.id}" role="alert" aria-live="assertive"></div>
+      <button class="add-btn" id="addBtn-${shoe.id}" onclick="addToCart(${shoe.id})" ${allSoldOut ? 'disabled' : ''}>
+        ${allSoldOut ? 'Out of Stock' : 'Add to Cart'}
+      </button>
+
+      <div class="item-detail-desc">${shoe.description ? shoe.description : 'Standard packaging.'}</div>
+    </div>
+  `;
 }
 
 // Swipe left/right to move between photos on touch devices
-let lightboxTouchStartX = null;
-document.getElementById("lightbox")?.addEventListener("touchstart", (e) => {
-  lightboxTouchStartX = e.changedTouches[0].clientX;
+let itemDetailTouchStartX = null;
+document.getElementById("itemDetailOverlay")?.addEventListener("touchstart", (e) => {
+  itemDetailTouchStartX = e.changedTouches[0].clientX;
 }, { passive: true });
-document.getElementById("lightbox")?.addEventListener("touchend", (e) => {
-  if(lightboxTouchStartX === null) return;
-  const dx = e.changedTouches[0].clientX - lightboxTouchStartX;
-  if(Math.abs(dx) > 40){
-    lightboxStep(dx < 0 ? 1 : -1);
-  }
-  lightboxTouchStartX = null;
+document.getElementById("itemDetailOverlay")?.addEventListener("touchend", (e) => {
+  if(itemDetailTouchStartX === null) return;
+  const dx = e.changedTouches[0].clientX - itemDetailTouchStartX;
+  if(Math.abs(dx) > 40) itemDetailPhotoStep(dx < 0 ? 1 : -1);
+  itemDetailTouchStartX = null;
 }, { passive: true });
 
-function selectSize(shoeId, size){ selections[shoeId] = size; renderGrid(); }
+function selectSize(shoeId, size){ selections[shoeId] = size; renderItemDetail(); }
 
 function addToCart(shoeId){
   const shoe = SHOES.find(s=>s.id===shoeId);
